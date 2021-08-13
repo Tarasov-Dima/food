@@ -118,7 +118,98 @@ window.addEventListener('DOMContentLoaded', () => {
       item.classList.remove('tabcontent_active', 'fade');
       item.classList.remove('tabheader__item_active', 'fade');
     });
+  } // TImer
+
+
+  const deadLine = '2021-08-13';
+  const timerDay = document.getElementById('days'),
+        timerHour = document.getElementById('hours'),
+        timerMinute = document.getElementById('minutes'),
+        timerSecond = document.getElementById('seconds');
+
+  function getTimeRemaining(endtime) {
+    const time = Date.parse(endtime) - Date.parse(new Date()),
+          days = Math.floor(time / (1000 * 60 * 60 * 24)),
+          hours = Math.floor(time / (1000 * 60 * 60) % 24),
+          minutes = Math.floor(time / (1000 * 60) % 60),
+          seconds = Math.floor(time / 1000 % 60);
+    return {
+      'total': time,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
   }
+
+  function clock(endtime) {
+    const timeInterval = setInterval(updateClock, 1000);
+    updateClock();
+
+    function updateClock() {
+      const t = getTimeRemaining(endtime);
+      timerDay.innerHTML = getZero(t.days);
+      timerHour.innerHTML = getZero(t.hours);
+      timerMinute.innerHTML = getZero(t.minutes);
+      timerSecond.innerHTML = getZero(t.seconds);
+
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+      }
+
+      detectName(t.minutes);
+      detectName(t.seconds);
+      detectName(t.hours);
+      detectName(t.days);
+    }
+
+    function detectName(num) {
+      const t = getTimeRemaining(endtime);
+      let someName, selector;
+
+      if (num == t.seconds) {
+        someName = ['секунда', 'секунды', 'секунд'];
+        selector = document.querySelector('.secondchange');
+      }
+
+      if (num == t.minutes) {
+        someName = ['минута', 'минуты', 'минут'];
+        selector = document.querySelector('.minutechange');
+      }
+
+      if (num == t.hours) {
+        someName = ['час', 'часа', 'часов'];
+        selector = document.querySelector('.hourchange');
+      }
+
+      if (num == t.days) {
+        someName = ['день', 'дня', 'дней'];
+        selector = document.querySelector('.daychange');
+      }
+
+      changeName(someName, selector, num);
+    }
+
+    function changeName(someName, selector, num) {
+      if (num == 1 || num == 21 || num == 31 || num == 41 || num == 51) {
+        selector.textContent = someName[0];
+      } else if (num > 1 && num < 5 || num > 21 && num < 25 || num > 31 && num < 35 || num > 41 && num < 45 || num > 51 && num < 55) {
+        selector.textContent = someName[1];
+      } else {
+        selector.textContent = someName[2];
+      }
+    }
+
+    function getZero(num) {
+      if (num >= 0 && num < 10 && num != 0) {
+        return `0${num}`;
+      } else {
+        return num;
+      }
+    }
+  }
+
+  clock(deadLine);
 });
 
 /***/ })
