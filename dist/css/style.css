@@ -528,3 +528,5 @@ a {
     display: block;
     width: 280px;
     margin: 0 auto; }
+  .modal_active {
+    display: block; }

@@ -121,7 +121,7 @@ window.addEventListener('DOMContentLoaded', () => {
   } // TImer
 
 
-  const deadLine = '2021-08-13';
+  const deadLine = '2021-08-14';
   const timerDay = document.getElementById('days'),
         timerHour = document.getElementById('hours'),
         timerMinute = document.getElementById('minutes'),
@@ -155,6 +155,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (t.total <= 0) {
         clearInterval(timeInterval);
+        timerDay.innerHTML = 0;
+        timerHour.innerHTML = 0;
+        timerMinute.innerHTML = 0;
+        timerSecond.innerHTML = 0;
       }
 
       detectName(t.minutes);
@@ -209,7 +213,50 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  clock(deadLine);
+  clock(deadLine); //Modal
+
+  const modal = document.querySelector('.modal'),
+        modalBtns = document.querySelectorAll('button[data-modal]'),
+        modalClose = document.querySelector('[data-close');
+
+  const modalToogle = () => {
+    modal.classList.toggle('modal_active');
+
+    if (modal.classList.contains('modal_active')) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    clearInterval(modalTimerId);
+  };
+
+  modalBtns.forEach(btn => {
+    btn.addEventListener('click', modalToogle);
+  });
+  modalClose.addEventListener('click', () => {
+    modalToogle();
+  });
+  modal.addEventListener('click', e => {
+    if (e.target == modal) {
+      modalToogle();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.code === "Escape" && modal.classList.contains('modal_active')) {
+      modalToogle();
+    }
+  });
+  const modalTimerId = setTimeout(modalToogle, 3000);
+
+  function showModalByScroll() {
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      modalToogle();
+      window.removeEventListener('scroll', showModalByScroll);
+    }
+  }
+
+  window.addEventListener('scroll', showModalByScroll);
 });
 
 /***/ })
