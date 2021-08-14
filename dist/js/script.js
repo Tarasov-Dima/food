@@ -217,7 +217,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const modal = document.querySelector('.modal'),
         modalBtns = document.querySelectorAll('button[data-modal]'),
-        modalClose = document.querySelector('[data-close');
+        modalClose = document.querySelector('[data-close]');
 
   const modalToogle = () => {
     modal.classList.toggle('modal_active');
@@ -226,14 +226,11 @@ window.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
-    }
+    } // clearInterval(modalTimerId);
 
-    clearInterval(modalTimerId);
   };
 
-  modalBtns.forEach(btn => {
-    btn.addEventListener('click', modalToogle);
-  });
+  modalBtns.forEach(btn => btn.addEventListener('click', modalToogle));
   modalClose.addEventListener('click', () => {
     modalToogle();
   });
@@ -246,8 +243,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.code === "Escape" && modal.classList.contains('modal_active')) {
       modalToogle();
     }
-  });
-  const modalTimerId = setTimeout(modalToogle, 3000);
+  }); // const modalTimerId = setTimeout(modalToogle, 3000);
 
   function showModalByScroll() {
     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -256,7 +252,44 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  window.addEventListener('scroll', showModalByScroll);
+  window.addEventListener('scroll', showModalByScroll); //Cards
+
+  class MenuCard {
+    constructor(img, alt, subtitle, descr, price, parentSelector) {
+      this.img = img;
+      this.alt = alt;
+      this.subtitle = subtitle;
+      this.descr = descr;
+      this.price = price;
+      this.parent = document.querySelector(parentSelector);
+      this.transfer = 20;
+      this.changeToUAN();
+    }
+
+    changeToUAN() {
+      this.price = this.price * this.transfer;
+    }
+
+    setCard() {
+      const element = document.createElement('div');
+      element.classList.add('menu__item');
+      element.innerHTML = ` <img src=${this.img} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">Меню ${this.subtitle}</h3>
+                    <div class="menu__item-descr">${this.descr}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Цена:</div>
+                        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                    </div>
+            `;
+      this.parent.append(element);
+    }
+
+  }
+
+  new MenuCard("img/tabs/vegy.jpg", "vegy", '"Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 229, '.menu .container').setCard();
+  new MenuCard("img/tabs/elite.jpg", "elite", '“Премиум”', 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 550, '.menu .container').setCard();
+  new MenuCard("img/tabs/post.jpg", "post", '"Постное"', 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.', 430, '.menu .container').setCard();
 });
 
 /***/ })
