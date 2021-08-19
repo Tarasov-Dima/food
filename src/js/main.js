@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // TImer
 
-    const deadLine = '2021-08-14';
+    const deadLine = '2021-08-25';
     const   timerDay = document.getElementById('days'),
             timerHour = document.getElementById('hours'),
             timerMinute = document.getElementById('minutes'),
@@ -85,31 +85,48 @@ window.addEventListener('DOMContentLoaded', () => {
             const t = getTimeRemaining(endtime);
             let someName,
                 selector;
-            if(num == t.seconds){
-                someName = ['секунда','секунды','секунд'];
+            if (num == t.seconds){
+                someName = {
+                    first: 'секунда',
+                    second: 'секунды',
+                    third: 'секунд'
+                };
                 selector =  document.querySelector('.secondchange');
-            }
-            if(num == t.minutes){
-                someName = ['минута','минуты','минут'];
+            } 
+            if (num == t.minutes){
+                someName = {
+                    first: 'минута',
+                    second: 'минуты',
+                    third: 'минут'
+                };
                 selector = document.querySelector('.minutechange');
-            }if(num ==t.hours){
-                someName = ['час','часа','часов'];
+            }
+            if (num ==t.hours){
+                someName = {
+                    first: 'час',
+                    second: 'часа',
+                    third: 'часов'
+                };
                 selector = document.querySelector('.hourchange');
-            }if(num == t.days){
-                someName = ['день','дня','дней'];
+            }
+            if(num == t.days){
+                someName = {
+                    first: 'день',
+                    second: 'дня',
+                    third: 'дней'
+                };
                 selector = document.querySelector('.daychange');
-
             }
            changeName(someName, selector, num);
         }
         
         function changeName(someName, selector, num){
             if(num == 1 || num == 21 || num == 31 || num == 41 || num == 51){
-                selector.textContent = someName[0];
+                selector.textContent = someName.first;
             }else if(num > 1 && num < 5 || num > 21 && num < 25 || num > 31 && num < 35 || num > 41 && num < 45 || num > 51 && num < 55){ 
-                selector.textContent = someName[1];            
+                selector.textContent = someName.second;            
             }else{
-                selector.textContent = someName[2]; 
+                selector.textContent = someName.third; 
             }
         }
         
@@ -230,6 +247,60 @@ window.addEventListener('DOMContentLoaded', () => {
         '.menu .container'
     ).setCard();
 
+//Forms
+    const forms  = document.querySelectorAll('form');
+    
+    const message = {
+        loading: 'Загрузка',
+        success: 'Спасибо! Скоро свяжемся',
+        failure: 'Что-то пошло не так...'
+
+    };
+
+    function postData (form){
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const statusMessage = document.createElement('div');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            
+            request.setRequestHeader('Content-type','application/json');
+            
+            const formData = new FormData(form);
+
+            const object = {};
+
+            formData.forEach((value, key) => {
+                object[key] = value;
+            });
+
+            const json = JSON.stringify(object);
+            request.send(json);
+            
+
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    console.log(request.response);
+                    statusMessage.textContent = message.success; 
+                    
+                } else {
+                    statusMessage.textContent = message.failure; 
+                }
+                setTimeout(()=>{
+                    form.reset();
+                    statusMessage.remove();
+                },1000);
+
+            });
+        });
+    }
+    forms.forEach((form)=>{
+        postData(form);
+    });
 }); 
 
 
