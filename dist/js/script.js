@@ -219,51 +219,51 @@ window.addEventListener('DOMContentLoaded', () => {
         selector.textContent = someName.third;
       }
     }
-
-    function getZero(num) {
-      if (num >= 0 && num < 10 && num != 0) {
-        return `0${num}`;
-      } else {
-        return num;
-      }
-    }
   }
 
-  clock(deadLine); //Modal
+  clock(deadLine);
 
-  const modal = document.querySelector('.modal'),
-        modalBtns = document.querySelectorAll('button[data-modal]'),
-        modalClose = document.querySelector('[data-close]');
-
-  const modalToogle = () => {
-    modal.classList.toggle('modal_active');
-
-    if (modal.classList.contains('modal_active')) {
-      document.body.style.overflow = 'hidden';
+  function getZero(num) {
+    if (num >= 0 && num < 10 && num != 0) {
+      return `0${num}`;
     } else {
-      document.body.style.overflow = '';
-    } // clearInterval(modalTimerId);
+      return num;
+    }
+  } //Modal
 
-  };
 
-  modalBtns.forEach(btn => btn.addEventListener('click', modalToogle));
-  modalClose.addEventListener('click', () => {
-    modalToogle();
+  const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal');
+  modalTrigger.forEach(btn => {
+    btn.addEventListener('click', openModal);
   });
+
+  function closeModal() {
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  function openModal() {
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+    document.body.style.overflow = 'hidden'; // clearInterval(modalTimerId);
+  }
+
   modal.addEventListener('click', e => {
-    if (e.target == modal) {
-      modalToogle();
+    if (e.target === modal || e.target.getAttribute('data-close') == "") {
+      closeModal();
     }
   });
   document.addEventListener('keydown', e => {
-    if (e.code === "Escape" && modal.classList.contains('modal_active')) {
-      modalToogle();
+    if (e.code === "Escape" && modal.classList.contains('show')) {
+      closeModal();
     }
-  }); // const modalTimerId = setTimeout(modalToogle, 3000);
+  }); // const modalTimerId = setTimeout(openModal, 3000);
 
   function showModalByScroll() {
     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-      modalToogle();
+      openModal();
       window.removeEventListener('scroll', showModalByScroll);
     }
   }
@@ -303,52 +303,155 @@ window.addEventListener('DOMContentLoaded', () => {
 
   }
 
-  new MenuCard("img/tabs/vegy.jpg", "vegy", '"Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 229, '.menu .container').setCard();
-  new MenuCard("img/tabs/elite.jpg", "elite", '“Премиум”', 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 550, '.menu .container').setCard();
-  new MenuCard("img/tabs/post.jpg", "post", '"Постное"', 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.', 430, '.menu .container').setCard(); //Forms
+  const getResourse = async url => {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status ${res.status}`);
+    }
+
+    return await res.json();
+  }; // if(getResourse == undefined ){
+  // }
+
+
+  getResourse('http://localhost:3000/menu').then(data => {
+    data.forEach(({
+      img,
+      altimg,
+      title,
+      descr,
+      price
+    }) => {
+      new MenuCard(img, altimg, title, descr, price, '.menu .container').setCard();
+    });
+  }); // new MenuCard(
+  //     "img/tabs/vegy.jpg",
+  //     "vegy",
+  //     '"Фитнес"',
+  //     'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+  //     229,
+  //     '.menu .container'
+  // ).setCard();
+  // new MenuCard(
+  //     "img/tabs/elite.jpg",
+  //     "elite",
+  //     '“Премиум”',
+  //     'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+  //     550,
+  //     '.menu .container'
+  // ).setCard();
+  // new MenuCard(
+  //     "img/tabs/post.jpg",
+  //     "post",
+  //     '"Постное"',
+  //     'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+  //     430,
+  //     '.menu .container'
+  // ).setCard();
+  //Forms
 
   const forms = document.querySelectorAll('form');
   const message = {
-    loading: 'Загрузка',
-    success: 'Спасибо! Скоро свяжемся',
+    loading: 'img/form/spinner.svg',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
     failure: 'Что-то пошло не так...'
   };
+  forms.forEach(item => {
+    bindPostData(item);
+  });
 
-  function postData(form) {
+  const postData = async (url, data) => {
+    let result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: data
+    });
+    return await result.json();
+  };
+
+  function bindPostData(form) {
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const statusMessage = document.createElement('div');
-      statusMessage.textContent = message.loading;
-      form.append(statusMessage);
-      const request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
-      request.setRequestHeader('Content-type', 'application/json');
-      const formData = new FormData(form);
-      const object = {};
-      formData.forEach((value, key) => {
-        object[key] = value;
-      });
-      const json = JSON.stringify(object);
-      request.send(json);
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
-          statusMessage.textContent = message.success;
-        } else {
-          statusMessage.textContent = message.failure;
-        }
-
-        setTimeout(() => {
-          form.reset();
-          statusMessage.remove();
-        }, 1000);
+      let statusMessage = document.createElement('img');
+      statusMessage.src = message.loading;
+      statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+      form.insertAdjacentElement('afterend', statusMessage);
+      let formData = new FormData(form);
+      const json = JSON.stringify(Object.fromEntries(formData.entries()));
+      postData('http://localhost:3000/requests', json).then(data => {
+        console.log(data);
+        showThanksModal(message.success);
+        statusMessage.remove();
+      }).catch(() => {
+        showThanksModal(message.failure);
+      }).finally(() => {
+        form.reset();
       });
     });
   }
 
-  forms.forEach(form => {
-    postData(form);
+  function showThanksModal(message) {
+    const prevModalDialog = document.querySelector('.modal__dialog');
+    prevModalDialog.classList.add('hide');
+    openModal();
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+    document.querySelector('.modal').append(thanksModal);
+    setTimeout(() => {
+      thanksModal.remove();
+      prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
+      closeModal();
+    }, 2000);
+  } //slider
+
+
+  const rightArrow = document.querySelector('.offer__slider-next'),
+        leftArrow = document.querySelector('.offer__slider-prev'),
+        slideContent = document.querySelectorAll('.offer__slide'),
+        slideNumber = document.querySelector('#current'),
+        slideTotalNumber = document.querySelector('#total');
+  let numSlide = 0;
+  rightArrow.addEventListener('click', () => {
+    numSlide++;
+
+    if (numSlide > slideContent.length - 1) {
+      numSlide = 0;
+    }
+
+    showSlide(numSlide);
   });
+  leftArrow.addEventListener('click', () => {
+    numSlide--;
+
+    if (numSlide < 0) {
+      numSlide = slideContent.length - 1;
+    }
+
+    showSlide(numSlide);
+  });
+
+  function showSlide(num) {
+    slideContent.forEach(item => {
+      item.classList.remove('active');
+    });
+    slideContent[num].classList.add('active');
+    slideNumber.textContent = getZero(numSlide + 1);
+  }
+
+  slideTotalNumber.textContent = getZero(slideContent.length);
 });
 
 /***/ })

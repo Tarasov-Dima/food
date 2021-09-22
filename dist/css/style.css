@@ -257,11 +257,14 @@ a {
       color: black; }
   .offer__slide {
     width: 100%;
-    height: 390px; }
+    height: 390px;
+    display: none; }
     .offer__slide img {
       width: 100%;
       height: 100%;
       object-fit: cover; }
+  .offer .active {
+    display: block; }
 
 .calculating {
   padding: 50px 0; }
@@ -369,7 +372,8 @@ a {
       margin-top: 20px; }
     .menu__item-descr {
       margin-top: 20px;
-      padding: 0 20px; }
+      padding: 0 20px;
+      min-height: 134px; }
     .menu__item-divider {
       width: 100%;
       height: 1px;
@@ -530,3 +534,9 @@ a {
     margin: 0 auto; }
   .modal_active {
     display: block; }
+
+.show {
+  display: block; }
+
+.hide {
+  display: none; }
