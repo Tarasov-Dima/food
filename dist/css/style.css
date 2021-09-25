@@ -251,6 +251,9 @@ a {
     .offer__slider-next {
       margin-left: 10px;
       cursor: pointer; }
+    .offer__slider-inner {
+      display: flex;
+      transition: 0.5s all; }
     .offer__slider #current {
       font-size: 48px;
       font-weight: bold;

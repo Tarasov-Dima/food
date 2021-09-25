@@ -71,6 +71,11 @@
             margin-left: 10px;
             cursor: pointer;
         }
+        &-inner {
+            display: flex;
+            transition: 0.5s all;
+            
+        }
         #current {
             font-size: 48px;
             font-weight: bold;
