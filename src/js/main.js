@@ -443,10 +443,43 @@ window.addEventListener('DOMContentLoaded', () => {
 
 //Calculator
     const result = document.querySelector('.calculating__result span');
-    let sex = 'female',
-        height, weight, age,
+    let sex, height, weight, age, ratio;
+    //check local storage
+    if(localStorage.getItem('sex')){
+        sex = localStorage.getItem('sex');
+    }else{
+        sex = 'female';
+        localStorage.setItem("sex", 'female');
+    }
+    if(localStorage.getItem('ratio')){
+        ratio = localStorage.getItem('ratio');
+    }else{
         ratio = 1.375;
+        localStorage.setItem('ratio', 1.375);
+    }
 
+    function addActiveClassForCalculator(element){
+        element.classList.add('calculating__choose-item_active');
+    }
+    function removeActiveClassForCalculator(element){
+        element.classList.remove('calculating__choose-item_active');
+    }
+
+    function changeActiveClassLocalStorage(selector){
+        const items = document.querySelectorAll(`${selector} div`);
+
+        items.forEach(item => {
+            removeActiveClassForCalculator(item);
+            if(localStorage.getItem('sex') === item.getAttribute('id')) {
+                addActiveClassForCalculator(item);
+            }
+            if(localStorage.getItem('ratio') === item.getAttribute('data-ratio')) {
+                addActiveClassForCalculator(item);
+            }
+        });
+    }
+    changeActiveClassLocalStorage('#gender');
+    changeActiveClassLocalStorage('.calculating__choose_big');
 
     function calculateResult() {
         if(!sex || !height || !weight || !age || !ratio){
@@ -470,14 +503,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 let e = event.target;
                 if (e.hasAttribute('data-ratio')){
                     ratio = +e.getAttribute('data-ratio');
+                    localStorage.setItem('ratio', ratio);
                 } else {
                     sex = e.getAttribute("id");
+                    localStorage.setItem('sex', sex);
                 }
 
                 calcItem.forEach(item => {
-                    item.classList.remove('calculating__choose-item_active');
+                   removeActiveClassForCalculator(item);
                 });
-                e.classList.add('calculating__choose-item_active');
+                addActiveClassForCalculator(e);
                 calculateResult();
             });
         });
@@ -489,8 +524,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function getInputData(selector){
         const input = document.querySelector(`${selector}`);
-        
+       
         input.addEventListener('input', () => {
+  
+            if (input.value.match(/\D/g)){
+                input.style.border = '1px solid red';
+            }else{
+                input.style.border = 'none';
+            }
+
             switch(input.getAttribute('id')){
                 case "height":
                     height = input.value;
