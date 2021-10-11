@@ -113,41 +113,23 @@ __webpack_require__.r(__webpack_exports__);
 
 window.addEventListener('DOMContentLoaded', () => {
     
-    const modalTimerId = setTimeout(() => Object(_modules_modal__WEBPACK_IMPORTED_MODULE_2__["openModal"])('.modal', modalTimerId), 3000);
+    const modalTimerId = setTimeout(() => Object(_modules_modal__WEBPACK_IMPORTED_MODULE_2__["openModal"])('.modal', modalTimerId), 5000);
     Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    Object(_modules_timer__WEBPACK_IMPORTED_MODULE_1__["default"])();
+    Object(_modules_timer__WEBPACK_IMPORTED_MODULE_1__["default"])('2021-10-12');
     Object(_modules_modal__WEBPACK_IMPORTED_MODULE_2__["default"])('.modal', modalTimerId);
     Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalTimerId);
-    Object(_modules_carouselSlider__WEBPACK_IMPORTED_MODULE_4__["default"])();
+    Object(_modules_carouselSlider__WEBPACK_IMPORTED_MODULE_4__["default"])({
+        container: '.offer__slider',
+        slide: '.offer__slide', 
+        prevArrow: '.offer__slider-prev',
+        nextArrow: '.offer__slider-next',
+        currentNumber: '#current',
+        totalNumber: '#total',
+        field: '.offer__slider-inner',
+        wrapper: '.offer__slider-wrapper'
+    });
     Object(_modules_cards__WEBPACK_IMPORTED_MODULE_5__["default"])();
     Object(_modules_calculator__WEBPACK_IMPORTED_MODULE_6__["default"])();
-    // new MenuCard(
-    //     "img/tabs/vegy.jpg",
-    //     "vegy",
-    //     '"Фитнес"',
-    //     'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    //     229,
-    //     '.menu .container'
-    // ).setCard();
-
-    // new MenuCard(
-    //     "img/tabs/elite.jpg",
-    //     "elite",
-    //     '“Премиум”',
-    //     'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-    //     550,
-    //     '.menu .container'
-    // ).setCard();
-
-    // new MenuCard(
-    //     "img/tabs/post.jpg",
-    //     "post",
-    //     '"Постное"',
-    //     'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-    //     430,
-    //     '.menu .container'
-    // ).setCard();
-
 }); 
 
 
@@ -293,9 +275,8 @@ function calculator(){
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/services */ "./src/js/services/services.js");
 
-function cards(){
-        //Cards
 
+function cards(){
         class MenuCard {
             constructor(img, alt, subtitle, descr, price, parentSelector) {
             this.img = img;
@@ -349,16 +330,16 @@ function cards(){
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _timer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./timer */ "./src/js/modules/timer.js");
 
-function slider(){
+function slider({container, slide, prevArrow, nextArrow, currentNumber, totalNumber, field, wrapper}){
     //carousel slider
-    const   rightArrow = document.querySelector('.offer__slider-next'),
-            leftArrow = document.querySelector('.offer__slider-prev'),
-            slideContent = document.querySelectorAll('.offer__slide'),
-            slider = document.querySelector('.offer__slider'),
-            slideNumber = document.querySelector('#current'),
-            slideTotalNumber = document.querySelector('#total'),
-            slideField = document.querySelector('.offer__slider-inner'),
-            slideWrapper = document.querySelector('.offer__slider-wrapper'),
+    const   rightArrow = document.querySelector(nextArrow),
+            leftArrow = document.querySelector(prevArrow),
+            slideContent = document.querySelectorAll(slide),
+            slider = document.querySelector(container),
+            slideNumber = document.querySelector(currentNumber),
+            slideTotalNumber = document.querySelector(totalNumber),
+            slideField = document.querySelector(field),
+            slideWrapper = document.querySelector(wrapper),
             slidesWidth = window.getComputedStyle(slideWrapper).width;
 
     let offset = 0;
@@ -506,6 +487,7 @@ function forms(modalTimerId){
             }).finally(() => {
                 form.reset();
             });
+            
         });
     }
 
@@ -560,7 +542,6 @@ function openModal(modalSelector, modalTimerId) {
     modal.classList.remove('hide');
     document.body.style.overflow = 'hidden';
 
-    console.log(modalTimerId);
     if (modalTimerId){
         clearInterval(modalTimerId);
     }
@@ -589,8 +570,6 @@ function modal(modalSelector, modalTimerId){
             closeModal(modalSelector);
         }
     });
-
-    // const modalTimerId = setTimeout(openModal, 3000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -667,10 +646,8 @@ function getZero(num){
         return num;
     }
 }
-function timer(){
-    // TImer
+function timer(deadLine){
 
-    const   deadLine = '2021-10-08';
     const   timerDay = document.getElementById('days'),
             timerHour = document.getElementById('hours'),
             timerMinute = document.getElementById('minutes'),
@@ -817,6 +794,9 @@ const getResourse = async(url) => {
     }
     return await res.json();
 };
+
+
+
 
 
 

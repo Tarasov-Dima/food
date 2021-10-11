@@ -1,14 +1,14 @@
 import {getZero} from './timer';
-function slider(){
+function slider({container, slide, prevArrow, nextArrow, currentNumber, totalNumber, field, wrapper}){
     //carousel slider
-    const   rightArrow = document.querySelector('.offer__slider-next'),
-            leftArrow = document.querySelector('.offer__slider-prev'),
-            slideContent = document.querySelectorAll('.offer__slide'),
-            slider = document.querySelector('.offer__slider'),
-            slideNumber = document.querySelector('#current'),
-            slideTotalNumber = document.querySelector('#total'),
-            slideField = document.querySelector('.offer__slider-inner'),
-            slideWrapper = document.querySelector('.offer__slider-wrapper'),
+    const   rightArrow = document.querySelector(nextArrow),
+            leftArrow = document.querySelector(prevArrow),
+            slideContent = document.querySelectorAll(slide),
+            slider = document.querySelector(container),
+            slideNumber = document.querySelector(currentNumber),
+            slideTotalNumber = document.querySelector(totalNumber),
+            slideField = document.querySelector(field),
+            slideWrapper = document.querySelector(wrapper),
             slidesWidth = window.getComputedStyle(slideWrapper).width;
 
     let offset = 0;

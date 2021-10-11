@@ -1,7 +1,6 @@
 import {getResourse} from "../services/services";
-function cards(){
-        //Cards
 
+function cards(){
         class MenuCard {
             constructor(img, alt, subtitle, descr, price, parentSelector) {
             this.img = img;

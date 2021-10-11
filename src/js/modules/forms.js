@@ -41,6 +41,7 @@ function forms(modalTimerId){
             }).finally(() => {
                 form.reset();
             });
+            
         });
     }
 

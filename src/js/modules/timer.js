@@ -5,10 +5,8 @@ function getZero(num){
         return num;
     }
 }
-function timer(){
-    // TImer
+function timer(deadLine){
 
-    const   deadLine = '2021-10-08';
     const   timerDay = document.getElementById('days'),
             timerHour = document.getElementById('hours'),
             timerMinute = document.getElementById('minutes'),
