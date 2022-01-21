@@ -1,4 +1,4 @@
-# Food page
+# [Food page](https://dimatarasov.com/food)
 
 Web page that displays information about several diets and calculates nutritional intake based on the user's gender, weight, age and type of physical activity. 
 ## Used stack
